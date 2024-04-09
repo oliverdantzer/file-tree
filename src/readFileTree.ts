@@ -30,22 +30,22 @@ export class Tree {
   ) {
     let branchesString = branches.reduce((a, b) => {
       const connection =
-        a in [branch.middleConnected, branch.lastConnected] ? "───" : "    ";
+        a in [branch.middleConnected, branch.lastConnected] ? "──" : "  ";
       return a + connection + b;
     }, "");
-    let branchesStringSuffix = "───";
+    let branchesStringSuffix = "─ ";
     // if (!isDir) {
     //   branchesStringSuffix = "──>";
     // }
     if (ignored) {
       // branchesString = branchesString.replace(branch.lastConnected, "┗");
       // branchesString = branchesString.replace(branch.middleConnected, "┣");
-      branchesStringSuffix = "──]";
+      branchesStringSuffix = "─]";
     }
     if (branches.length === 0) {
       branchesStringSuffix = "";
     }
-    this.buffer += `${branchesString}${branchesStringSuffix} ${filename}${
+    this.buffer += `${branchesString}${branchesStringSuffix}${filename}${
       isDir ? "/" : ""
     }${ignored ? " (ignored)" : ""}\n`;
   }

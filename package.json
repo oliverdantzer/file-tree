@@ -1,8 +1,14 @@
 {
-  "name": "file-tree",
-  "displayName": "file-tree",
+  "name": "file-structure-tree",
+  "displayName": "File Structure Tree",
   "description": "Generates tree of directory file structure and ignores patterns in gitignore. Supports multiple nested .gitignore files and highlights ignored files.",
+  "icon": "images/icon.png",
   "version": "0.0.1",
+  "publisher": "oliverdantzer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oliverdantzer/file-tree"
+  },
   "engines": {
     "vscode": "^1.86.0"
   },
