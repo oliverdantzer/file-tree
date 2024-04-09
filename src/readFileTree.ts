@@ -60,6 +60,13 @@ export class Tree {
     isDir: boolean,
     isLast: boolean
   ) {
+    if (name === ".git") {
+      if (branches.length === 0) {
+        this.readFile(name, branches, isDir);
+      } else {
+        return;
+      }
+    }
     if (this.ignore.ignores(path)) {
       this.readFile(name, branches, isDir, true);
     } else {

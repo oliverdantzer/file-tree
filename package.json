@@ -1,7 +1,7 @@
 {
   "name": "file-tree",
   "displayName": "file-tree",
-  "description": "Generates tree of files in directory",
+  "description": "Generates tree of directory file structure and ignores patterns in gitignore. Supports multiple nested .gitignore files and highlights ignored files.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.86.0"

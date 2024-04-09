@@ -19,7 +19,7 @@ async function outputFileTree(dirPathUnix: string, ig: Ignore = new Ignore()) {
   console.log(output);
   const document = await workspace.openTextDocument({
     content: output,
-    language: "txt",
+    language: "tree",
   });
   window.showTextDocument(document);
 }

@@ -5,7 +5,7 @@ import { minimatch } from "minimatch";
 export class Ignore {
   patterns: string[];
   constructor(ignorePatterns?: string[]) {
-    this.patterns = [`**/.git`].concat(ignorePatterns || []);
+    this.patterns = ignorePatterns || [];
   }
   add(ignorePatterns: string, dirPath: string): void {
     this.patterns.push(
