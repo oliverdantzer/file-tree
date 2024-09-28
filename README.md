@@ -5,7 +5,7 @@ Generates file trees of your project's directories, with an output similar to th
 
 ## Features
 
-- Ignores your .git directory and everything in your .gitignore
+- Ignores your .git directory and the patterns in your .gitignore
   > This means this extension won't print out your whole .git or node_modules directory.
   > ![.env ignored](images/ignored.png)
 - Supports multiple .gitignore files nested in your workspace
