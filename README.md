@@ -1,4 +1,4 @@
-# About File Structure Tree
+# File Structure Tree
 
 Generates file trees of your project's directories, with an output similar to the `tree` command in Windows.
 ![Generate file structure tree from directory selection](images/from-selection-animation.gif)
@@ -10,13 +10,3 @@ Generates file trees of your project's directories, with an output similar to th
   > ![.env ignored](images/ignored.png)
 - Supports multiple nested .gitignore files
 - Highlights your ignored files, which can for debugging which files your .gitignore is targeting.
-
-Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Release Notes
-
-### 1.0.0
-
-Initial release
-
----
