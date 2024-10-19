@@ -7,7 +7,7 @@ export function joinPaths(...unixPaths: string[]) {
         (b.startsWith("/") ? b.slice(1, b.length) : b)
       );
     }, "")
-    .replace(/^\/+/, ""); // remove leading slashes
+    // .replace(/^\/+/, ""); // remove leading slashes
 }
 
 export function winPathToUnixPath(path: string) {

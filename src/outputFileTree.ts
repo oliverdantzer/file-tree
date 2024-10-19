@@ -3,7 +3,7 @@ import { Tree } from "./readFileTree";
 import { Ignore, applyGitignoreAbove } from "./ignore";
 import { joinPaths, winPathToUnixPath } from "./path";
 import path from "path";
-import {} from "fs";
+import { } from "fs";
 
 async function outputFileTree(dirPathUnix: string, ig: Ignore = new Ignore()) {
   // Read the configuration settings
@@ -12,7 +12,7 @@ async function outputFileTree(dirPathUnix: string, ig: Ignore = new Ignore()) {
   // let useGitignore = config.get("useGitignore") as boolean;
   // Generate the file tree
   console.log("ig: ", ig.patterns);
-  console.log("Generating file tree:");
+  console.log("Generating file tree from ", dirPathUnix);
   let tree = new Tree(ig, dirPathUnix);
   console.log("output follows:");
   const output = tree.read();

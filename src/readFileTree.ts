@@ -21,7 +21,7 @@ enum branch {
 
 export class Tree {
   buffer: string = "";
-  constructor(public ignore: Ignore, public selectedPath: string) {}
+  constructor(public ignore: Ignore, public selectedPath: string) { }
   readFile(
     filename: string,
     branches: branch[],
@@ -45,9 +45,8 @@ export class Tree {
     if (branches.length === 0) {
       branchesStringSuffix = "";
     }
-    this.buffer += `${branchesString}${branchesStringSuffix}${filename}${
-      isDir ? "/" : ""
-    }${ignored ? " (ignored)" : ""}\n`;
+    this.buffer += `${branchesString}${branchesStringSuffix}${filename}${isDir ? "/" : ""
+      }${ignored ? " (ignored)" : ""}\n`;
   }
   read(): string {
     this.recTree(this.selectedPath, this.selectedPath, [], true, true);
