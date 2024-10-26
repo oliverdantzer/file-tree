@@ -31,6 +31,14 @@ export class IgnoreCache {
   isIgnored(somePath: string): boolean {
     const posixPath = upath.normalize(somePath);
     return this.patterns.some((pattern) => {
+      if (
+        pattern.includes("node_modules") &&
+        posixPath.includes("node_modules")
+      ) {
+        console.log("pattern: ", pattern);
+        console.log("path: ", posixPath);
+        console.log("result: ", minimatch(posixPath, pattern));
+      }
       return minimatch(posixPath, pattern);
     });
   }

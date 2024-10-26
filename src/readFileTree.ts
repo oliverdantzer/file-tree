@@ -1,5 +1,7 @@
+import { Dirent } from "fs";
 import { Dir, FSObject } from "./filesystem";
 import { IgnoreCache } from "./ignore";
+import upath from "upath";
 
 enum Connector {
   TAB = "   ",
@@ -25,11 +27,19 @@ class DirTreeReader {
   constructor(path: string, ignore: IgnoreCache) {
     this.#out = new Out();
     this.#ignore = ignore;
-    this.#recReadDir(new Dir(path, path), "", true);
+    this.#recReadDir(Dir.fromPath(path), "", true);
   }
+
   #recReadDir(obj: FSObject, context: string, isLast: boolean): void {
-    console.log(obj.path);
-    if (obj instanceof Dir) {
+    const myConnector = isLast ? Connector.L : Connector.T;
+    const normalizedAlias = upath.normalize(obj.alias);
+    const suffix =
+      (obj instanceof Dir ? "/" : "") + (obj.isIgnored ? " (ignored)" : "");
+
+    this.#out.println(context + myConnector + normalizedAlias + suffix);
+
+    // If obj is a directory, recursively read its children
+    if (obj instanceof Dir && !obj.isIgnored) {
       const childConnector = isLast ? Connector.TAB : Connector.LINE;
       const childContext = context + childConnector;
       const children = obj.getChildren(this.#ignore);
@@ -38,9 +48,8 @@ class DirTreeReader {
         this.#recReadDir(child, childContext, isChildLast);
       });
     }
-    const myConnector = isLast ? Connector.L : Connector.T;
-    this.#out.println(context + myConnector + obj.name);
   }
+
   result(): string {
     return this.#out.buffer;
   }
