@@ -4,7 +4,7 @@ import { IgnoreCache, applyGitignoreAbove } from "./ignore";
 import path from "path";
 
 async function outputFileTree(
-  dirPathUnix: string,
+  dirPath: string,
   ig: IgnoreCache = new IgnoreCache()
 ) {
   // Read the configuration settings
@@ -13,7 +13,7 @@ async function outputFileTree(
   // let useGitignore = config.get("useGitignore") as boolean;
 
   // Generate the file tree
-  let tree = readDirTree(dirPathUnix, ig);
+  let tree = readDirTree(dirPath, ig);
 
   const document = await workspace.openTextDocument({
     content: tree,

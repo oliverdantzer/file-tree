@@ -28,6 +28,7 @@ class DirTreeReader {
     this.#recReadDir(new Dir(path, path), "", true);
   }
   #recReadDir(obj: FSObject, context: string, isLast: boolean): void {
+    console.log(obj.path);
     if (obj instanceof Dir) {
       const childConnector = isLast ? Connector.TAB : Connector.LINE;
       const childContext = context + childConnector;

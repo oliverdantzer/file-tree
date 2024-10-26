@@ -2,10 +2,12 @@ import { existsSync, readFileSync } from "fs";
 import { minimatch } from "minimatch";
 import upath from "upath";
 
+const defaultIgnorePatterns = [".git"];
+
 export class IgnoreCache {
   patterns: string[];
   constructor(ignorePatterns: string[] = []) {
-    this.patterns = ignorePatterns;
+    this.patterns = [...defaultIgnorePatterns, ...ignorePatterns];
   }
   add(ignorePatterns: string, dirPath: string): void {
     this.patterns.push(
@@ -42,15 +44,15 @@ export function applyGitignoreAbove(
   rootDirPath: string,
   targetDirPath: string
 ): void {
-  const posixRootDirPath = upath.normalize(rootDirPath);
-  let posixCurrentDir = upath.normalize(targetDirPath);
+  const posixRootPath = upath.normalize(rootDirPath);
+  let posixCurrentPath = upath.normalize(targetDirPath);
 
-  if (!posixRootDirPath.includes(posixCurrentDir)) {
+  if (!posixCurrentPath.includes(posixRootPath)) {
     throw new Error("rootDirPath must be a parent of targetDirPath");
   }
 
-  while (posixCurrentDir !== posixRootDirPath) {
-    ig.applyGitignore(posixCurrentDir);
-    posixCurrentDir = upath.join(posixCurrentDir, "..");
+  while (posixCurrentPath !== posixRootPath) {
+    ig.applyGitignore(posixCurrentPath);
+    posixCurrentPath = upath.join(posixCurrentPath, "..");
   }
 }
