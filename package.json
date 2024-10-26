@@ -81,6 +81,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "minimatch": "^9.0.3"
+    "minimatch": "^9.0.3",
+    "upath": "^2.0.1"
   }
 }

@@ -1,11 +1,11 @@
-import * as fs from "fs";
-import { joinPaths, winPathToUnixPath } from "./path";
+import { existsSync, readFileSync } from "fs";
 import { minimatch } from "minimatch";
+import upath from "upath";
 
-export class Ignore {
+export class IgnoreCache {
   patterns: string[];
-  constructor(ignorePatterns?: string[]) {
-    this.patterns = ignorePatterns || [];
+  constructor(ignorePatterns: string[] = []) {
+    this.patterns = ignorePatterns;
   }
   add(ignorePatterns: string, dirPath: string): void {
     this.patterns.push(
@@ -15,19 +15,21 @@ export class Ignore {
         .filter(
           (line) => !(line.startsWith("#") || line === "\n" || line === "")
         )
-        .map((pattern) => joinPaths(dirPath, pattern))
+        .map((pattern) => upath.join(dirPath, pattern))
     );
   }
   applyGitignore(dirPath: string): void {
-    let gitignorePath = joinPaths(dirPath, ".gitignore");
-    if (fs.existsSync(gitignorePath)) {
-      let gitignoreContent = fs.readFileSync(gitignorePath).toString();
-      this.add(gitignoreContent, dirPath);
+    const posixDirPath = upath.normalize(dirPath);
+    let gitignorePath = upath.join(posixDirPath, ".gitignore");
+    if (existsSync(gitignorePath)) {
+      let gitignoreContent = readFileSync(gitignorePath).toString();
+      this.add(gitignoreContent, posixDirPath);
     }
   }
-  ignores(entryPath: string): boolean {
+  isIgnored(somePath: string): boolean {
+    const posixPath = upath.normalize(somePath);
     return this.patterns.some((pattern) => {
-      return minimatch(entryPath, pattern);
+      return minimatch(posixPath, pattern);
     });
   }
   toString(): string {
@@ -36,15 +38,19 @@ export class Ignore {
 }
 
 export function applyGitignoreAbove(
-  ig: Ignore,
+  ig: IgnoreCache,
   rootDirPath: string,
   targetDirPath: string
 ): void {
-  let currentDir = rootDirPath.split("/");
-  let targetDir = targetDirPath.split("/");
-  let currentPath = rootDirPath;
-  for (let i = currentDir.length; i < targetDir.length; i++) {
-    ig.applyGitignore(currentPath);
-    currentPath = joinPaths(currentPath, targetDir[i]);
+  const posixRootDirPath = upath.normalize(rootDirPath);
+  let posixCurrentDir = upath.normalize(targetDirPath);
+
+  if (!posixRootDirPath.includes(posixCurrentDir)) {
+    throw new Error("rootDirPath must be a parent of targetDirPath");
+  }
+
+  while (posixCurrentDir !== posixRootDirPath) {
+    ig.applyGitignore(posixCurrentDir);
+    posixCurrentDir = upath.join(posixCurrentDir, "..");
   }
 }

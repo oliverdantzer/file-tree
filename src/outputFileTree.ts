@@ -1,43 +1,39 @@
-import { Uri, workspace, WorkspaceFolder, window } from "vscode";
-import { Tree } from "./readFileTree";
-import { Ignore, applyGitignoreAbove } from "./ignore";
-import { joinPaths, winPathToUnixPath } from "./path";
+import { Uri, workspace, window } from "vscode";
+import { readDirTree } from "./readFileTree";
+import { IgnoreCache, applyGitignoreAbove } from "./ignore";
 import path from "path";
-import { } from "fs";
 
-async function outputFileTree(dirPathUnix: string, ig: Ignore = new Ignore()) {
+async function outputFileTree(
+  dirPathUnix: string,
+  ig: IgnoreCache = new IgnoreCache()
+) {
   // Read the configuration settings
   // let config = workspace.getConfiguration(extensionName);
   // let ignorePatterns = config.get("ignorePatterns") as string[];
   // let useGitignore = config.get("useGitignore") as boolean;
+
   // Generate the file tree
-  console.log("ig: ", ig.patterns);
-  console.log("Generating file tree from ", dirPathUnix);
-  let tree = new Tree(ig, dirPathUnix);
-  console.log("output follows:");
-  const output = tree.read();
-  console.log(output);
+  let tree = readDirTree(dirPathUnix, ig);
+
   const document = await workspace.openTextDocument({
-    content: output,
+    content: tree,
     language: "tree",
   });
   window.showTextDocument(document);
 }
 
 export function outputFileTreeRelativeToWorkspace(dirPath: string): void {
-  const dirPathUnix = winPathToUnixPath(dirPath);
-  // Instantiate the ignore
-  let ig = new Ignore();
-  // ignorePatterns.map((pattern) => ig.add(pattern));
+  let ig = new IgnoreCache();
+
   const rootWorkspace = workspace.getWorkspaceFolder(Uri.file(dirPath));
   const rootPath = rootWorkspace?.uri.fsPath;
 
   // Generate ignores from rootPath to dir.fsPath/..
-  if (rootPath && !(rootPath === dirPath)) {
-    const rootPathUnix = winPathToUnixPath(rootPath);
-    applyGitignoreAbove(ig, rootPathUnix, dirPathUnix);
+  if (rootPath) {
+    applyGitignoreAbove(ig, rootPath, dirPath);
   }
-  outputFileTree(dirPathUnix, ig);
+
+  outputFileTree(dirPath, ig);
 }
 
 export function outputFileTreeFromDir(dir: Uri): void {
@@ -54,6 +50,5 @@ export function outputFileTreeFromWorkspace(uri: Uri) {
   if (!rootPath) {
     throw new Error("No workspace folder found");
   }
-  const rootPathUnix = winPathToUnixPath(rootPath);
-  outputFileTree(rootPathUnix);
+  outputFileTree(rootPath);
 }
