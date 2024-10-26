@@ -1,4 +1,4 @@
-import { commands, ExtensionContext, Uri } from "vscode";
+import { commands, ExtensionContext } from "vscode";
 import {
   outputFileTreeFromDir,
   outputFileTreeFromWorkspace,
