@@ -6,4 +6,4 @@
 
 ## [0.1.0]
 
-- Added support for systems with Unix-like paths
+- Added support for systems with posix paths
