@@ -32,7 +32,6 @@ class File extends FSObject {
     super(path, alias);
   }
 }
-
 export class Dir extends FSObject {
   constructor(path: string, alias: string) {
     super(path, alias);

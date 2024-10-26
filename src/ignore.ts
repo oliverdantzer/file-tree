@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "fs";
 import { minimatch } from "minimatch";
 import upath from "upath";
 
-const defaultIgnorePatterns = [".git"];
+const defaultIgnorePatterns: string[] = [];
 
 export class IgnoreCache {
   patterns: string[];

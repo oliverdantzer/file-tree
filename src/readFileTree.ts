@@ -4,10 +4,12 @@ import { IgnoreCache } from "./ignore";
 import upath from "upath";
 
 enum Connector {
-  TAB = "   ",
-  LINE = "│  ",
-  T = "├─ ",
-  L = "└─ ",
+  TAB = "    ",
+  LINE = "│   ",
+  T = "├── ",
+  L = "└── ",
+  T_IGNORED = "├─] ",
+  L_IGNORED = "└─] ",
 }
 
 class Out {
@@ -21,6 +23,8 @@ class Out {
     this.buffer += str + "\n";
   }
 }
+
+const defaultSkipAliases: string[] = [".git/"];
 class DirTreeReader {
   #out: Out;
   #ignore: IgnoreCache;
@@ -31,8 +35,19 @@ class DirTreeReader {
   }
 
   #recReadDir(obj: FSObject, context: string, isLast: boolean): void {
-    const myConnector = isLast ? Connector.L : Connector.T;
+    if (obj.alias in defaultSkipAliases) {
+      return;
+    }
+
+    let myConnector: string;
+    if (isLast) {
+      myConnector = obj.isIgnored ? Connector.L_IGNORED : Connector.L;
+    } else {
+      myConnector = obj.isIgnored ? Connector.T_IGNORED : Connector.T;
+    }
+
     const normalizedAlias = upath.normalize(obj.alias);
+    
     const suffix =
       (obj instanceof Dir ? "/" : "") + (obj.isIgnored ? " (ignored)" : "");
 
