@@ -7,3 +7,8 @@
 ## [0.1.0]
 
 - Added support for systems with posix paths
+
+## [1.0.0]
+
+- Extension now fully portable between posix and windows filesystems
+- Refactored codebase for enhanced readability
