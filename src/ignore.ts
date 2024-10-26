@@ -9,6 +9,7 @@ export class IgnoreCache {
   constructor(ignorePatterns: string[] = []) {
     this.patterns = [...defaultIgnorePatterns, ...ignorePatterns];
   }
+  
   add(ignorePatterns: string, dirPath: string): void {
     this.patterns.push(
       ...ignorePatterns
@@ -20,6 +21,7 @@ export class IgnoreCache {
         .map((pattern) => upath.join(dirPath, pattern))
     );
   }
+
   applyGitignore(dirPath: string): void {
     const posixDirPath = upath.normalize(dirPath);
     let gitignorePath = upath.join(posixDirPath, ".gitignore");
@@ -28,20 +30,14 @@ export class IgnoreCache {
       this.add(gitignoreContent, posixDirPath);
     }
   }
+
   isIgnored(somePath: string): boolean {
     const posixPath = upath.normalize(somePath);
     return this.patterns.some((pattern) => {
-      if (
-        pattern.includes("node_modules") &&
-        posixPath.includes("node_modules")
-      ) {
-        console.log("pattern: ", pattern);
-        console.log("path: ", posixPath);
-        console.log("result: ", minimatch(posixPath, pattern));
-      }
       return minimatch(posixPath, pattern);
     });
   }
+
   toString(): string {
     return this.patterns.join("\n");
   }

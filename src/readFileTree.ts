@@ -24,7 +24,7 @@ class Out {
   }
 }
 
-const defaultSkipAliases: string[] = [".git/"];
+const defaultSkipAliases: string[] = [".git"];
 class DirTreeReader {
   #out: Out;
   #ignore: IgnoreCache;
@@ -35,7 +35,7 @@ class DirTreeReader {
   }
 
   #recReadDir(obj: FSObject, context: string, isLast: boolean): void {
-    if (obj.alias in defaultSkipAliases) {
+    if (defaultSkipAliases.includes(obj.alias)) {
       return;
     }
 
@@ -47,7 +47,7 @@ class DirTreeReader {
     }
 
     const normalizedAlias = upath.normalize(obj.alias);
-    
+
     const suffix =
       (obj instanceof Dir ? "/" : "") + (obj.isIgnored ? " (ignored)" : "");
 
