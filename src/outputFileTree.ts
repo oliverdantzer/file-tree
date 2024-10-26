@@ -1,21 +1,20 @@
 import { Uri, workspace, WorkspaceFolder, window } from "vscode";
-import { Tree } from "./readFileTree";
-import { Ignore, applyGitignoreAbove } from "./ignore";
+import { readDirTree } from "./readFileTree";
+import { IgnoreCache, applyGitignoreAbove } from "./ignore";
 import { joinPaths, winPathToUnixPath } from "./path";
 import path from "path";
 import { } from "fs";
 
-async function outputFileTree(dirPathUnix: string, ig: Ignore = new Ignore()) {
+async function outputFileTree(dirPathUnix: string, ig: IgnoreCache = new IgnoreCache()) {
   // Read the configuration settings
   // let config = workspace.getConfiguration(extensionName);
   // let ignorePatterns = config.get("ignorePatterns") as string[];
   // let useGitignore = config.get("useGitignore") as boolean;
   // Generate the file tree
   console.log("ig: ", ig.patterns);
-  console.log("Generating file tree from ", dirPathUnix);
-  let tree = new Tree(ig, dirPathUnix);
+  let tree = readDirTree(dirPathUnix, ig);
   console.log("output follows:");
-  const output = tree.read();
+  const output = tree;
   console.log(output);
   const document = await workspace.openTextDocument({
     content: output,
@@ -27,7 +26,7 @@ async function outputFileTree(dirPathUnix: string, ig: Ignore = new Ignore()) {
 export function outputFileTreeRelativeToWorkspace(dirPath: string): void {
   const dirPathUnix = winPathToUnixPath(dirPath);
   // Instantiate the ignore
-  let ig = new Ignore();
+  let ig = new IgnoreCache();
   // ignorePatterns.map((pattern) => ig.add(pattern));
   const rootWorkspace = workspace.getWorkspaceFolder(Uri.file(dirPath));
   const rootPath = rootWorkspace?.uri.fsPath;
