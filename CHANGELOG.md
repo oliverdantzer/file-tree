@@ -12,3 +12,7 @@
 
 - Extension now fully portable between posix and windows filesystems
 - Refactored codebase for enhanced readability
+
+## [1.0.1]
+
+- Made first layer of tree not be indented
