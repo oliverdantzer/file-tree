@@ -31,10 +31,15 @@ class DirTreeReader {
   constructor(path: string, ignore: IgnoreCache) {
     this.#out = new Out();
     this.#ignore = ignore;
-    this.#recReadDir(Dir.fromPath(path), "", true);
+    this.#recReadDir(Dir.fromPath(path), "", true, true);
   }
 
-  #recReadDir(obj: FSObject, context: string, isLast: boolean): void {
+  #recReadDir(
+    obj: FSObject,
+    context: string,
+    isLast: boolean,
+    noTabOnce?: boolean
+  ): void {
     if (defaultSkipAliases.includes(obj.alias)) {
       return;
     }
@@ -44,6 +49,9 @@ class DirTreeReader {
       myConnector = obj.isIgnored ? Connector.L_IGNORED : Connector.L;
     } else {
       myConnector = obj.isIgnored ? Connector.T_IGNORED : Connector.T;
+    }
+    if (noTabOnce) {
+      myConnector = "";
     }
 
     const normalizedAlias = upath.normalize(obj.alias);
@@ -55,7 +63,10 @@ class DirTreeReader {
 
     // If obj is a directory, recursively read its children
     if (obj instanceof Dir && !obj.isIgnored) {
-      const childConnector = isLast ? Connector.TAB : Connector.LINE;
+      let childConnector: string = isLast ? Connector.TAB : Connector.LINE;
+      if (noTabOnce) {
+        childConnector = "";
+      }
       const childContext = context + childConnector;
       const children = obj.getChildren(this.#ignore);
       children.forEach((child, index) => {
